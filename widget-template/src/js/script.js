@@ -10,8 +10,6 @@ let data = {
 	}
 };
 
-let collection = new Collection()
-
 let device = data.device;
 let sampleList = data.config.sampleList;
 let sample = data.config.sample;
@@ -37,9 +35,6 @@ switch (device) {
 dmAPI.runOnReady('init', function () {
 	dmAPI.loadScript('PLUGIN LINK', function () {
 
-		// ? Uncomment this if you want to ue the CONNECT DATA feature
-		// sampleListData = collection.data(sampleList) 
-
 		if (sampleListData.length == 0) {
 
 			if (data.inEditor) {
@@ -56,8 +51,3 @@ dmAPI.runOnReady('init', function () {
 
 	})
 })
-
-function preloader() {
-	$(element).find('div.widget-Loader-Container').fadeOut().remove()
-	$(element).find('div.widgetName-Main-Container').fadeIn()
-}
