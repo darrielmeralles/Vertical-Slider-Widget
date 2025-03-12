@@ -42,31 +42,31 @@ $(document).ready(function () {
 
     // Initialize Slick Slider
     slider.slick({
-        dots: true,
+        dots: false, // Custom dots will be used
         arrows: false,
         infinite: false,
-        speed: 800, // Smooth transition speed
+        speed: 800,
         slidesToShow: 1,
         slidesToScroll: 1,
         vertical: true,
-        verticalSwiping: false, // Disable native Slick scrolling
-        cssEase: "ease-in-out", // Smooth transition effect
+        verticalSwiping: false,
+        cssEase: "ease-in-out",
     });
 
     gsap.registerPlugin(ScrollTrigger);
 
-    let totalSlides = $(".timeline-slider .slick-slide").length - 1; // Last slide index
-    let currentIndex = 0; // Track current slide index
+    let totalSlides = $(".timeline-slider .slick-slide").length - 1;
+    let currentIndex = 0;
 
     ScrollTrigger.create({
         trigger: ".container",
         start: "top top",
-        end: `+=${totalSlides * window.innerHeight}`, // Full height of all slides
+        end: `+=${totalSlides * window.innerHeight}`,
         pin: true,
-        scrub: false, // Disable smooth scrolling
+        scrub: false,
         snap: {
             snapTo: (progress) => Math.round(progress * totalSlides) / totalSlides,
-            duration: 0.5, // Smooth snap duration
+            duration: 0.5,
             ease: "power2.out",
         },
         onUpdate: (self) => {
@@ -74,8 +74,9 @@ $(document).ready(function () {
             if (newSlide !== currentIndex) {
                 currentIndex = newSlide;
                 slider.slick("slickGoTo", currentIndex);
+                updatePagination(currentIndex);
 
-                // Smooth fade transition for content
+                // Smooth content & image transition
                 $(".timeline-banner").css({ opacity: 0, transform: "translateY(50px)" });
                 gsap.to(".slick-current .timeline-banner", {
                     opacity: 1,
@@ -86,6 +87,26 @@ $(document).ready(function () {
             }
         },
     });
+
+    // Pagination Dots Setup
+    function createPaginationDots() {
+        const dotContainer = $(".pagination-dots");
+        for (let i = 0; i <= totalSlides; i++) {
+            dotContainer.append(`<div data-index="${i}"></div>`);
+        }
+        $(".pagination-dots div").first().addClass("active");
+
+        $(".pagination-dots div").on("click", function () {
+            let index = $(this).data("index");
+            slider.slick("slickGoTo", index);
+            updatePagination(index);
+        });
+    }
+
+    function updatePagination(index) {
+        $(".pagination-dots div").removeClass("active");
+        $(".pagination-dots div").eq(index).addClass("active");
+    }
 
     // Ensure content updates smoothly when slide changes
     slider.on("beforeChange", function (event, slick, currentSlide, nextSlide) {
@@ -99,9 +120,11 @@ $(document).ready(function () {
             duration: 0.8,
             ease: "power2.out",
         });
-
-        $(".slick-dots li").removeClass("active");
-        $(".slick-dots li").eq(currentSlide).addClass("active");
+        updatePagination(currentSlide);
     });
+
+    createPaginationDots();
 });
+
+
 
