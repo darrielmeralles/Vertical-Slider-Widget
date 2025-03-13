@@ -67,7 +67,7 @@ $(document).ready(function () {
         snap: {
             snapTo: (progress) => Math.round(progress * totalSlides) / totalSlides,
             duration: 0.5,
-            ease: "power2.out",
+            ease: "power2.inOut",
         },
         onUpdate: (self) => {
             let newSlide = Math.round(self.progress * totalSlides);
@@ -82,7 +82,7 @@ $(document).ready(function () {
                     opacity: 1,
                     y: 0,
                     duration: 0.8,
-                    ease: "power2.out",
+                    ease: "power2.inOut",
                 });
             }
         },
